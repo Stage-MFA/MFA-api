@@ -1,12 +1,11 @@
 package com.school.security.entities;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
@@ -16,9 +15,7 @@ public abstract class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-   @CreationTimestamp
-    protected LocalDateTime createdAt;
+    @CreationTimestamp protected LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    protected LocalDateTime updatedAt;
+    @UpdateTimestamp protected LocalDateTime updatedAt;
 }

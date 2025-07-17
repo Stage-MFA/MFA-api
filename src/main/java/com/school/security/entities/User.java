@@ -2,15 +2,14 @@ package com.school.security.entities;
 
 import com.school.security.enums.Gender;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -53,12 +52,8 @@ public class User extends Model implements Serializable, UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role: this.roles){
-            authorities.add(
-                    new SimpleGrantedAuthority(
-                            role.getName().name()
-                    )
-            );
+        for (Role role : this.roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName().name()));
         }
         return authorities;
     }

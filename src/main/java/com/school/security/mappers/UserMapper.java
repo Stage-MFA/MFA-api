@@ -5,13 +5,12 @@ import com.school.security.dtos.responses.RoleResDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.entities.Role;
 import com.school.security.entities.User;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper implements Mapper<UserReqDto, User, UserResDto>{
+public class UserMapper implements Mapper<UserReqDto, User, UserResDto> {
     private final RoleMapper roleMapper;
 
     public UserMapper(RoleMapper roleMapper) {
@@ -37,13 +36,10 @@ public class UserMapper implements Mapper<UserReqDto, User, UserResDto>{
                 entity.getLastname(),
                 entity.getEmail(),
                 entity.getGender(),
-               toRoleResDto(entity.getRoles())
-        );
+                toRoleResDto(entity.getRoles()));
     }
 
     private List<RoleResDto> toRoleResDto(List<Role> roles) {
-        return roles.stream()
-                .map(this.roleMapper::toDto)
-                .collect(Collectors.toList());
+        return roles.stream().map(this.roleMapper::toDto).collect(Collectors.toList());
     }
 }

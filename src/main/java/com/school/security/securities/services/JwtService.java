@@ -1,9 +1,7 @@
 package com.school.security.securities.services;
 
-
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.HashMap;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface JwtService {
     String generateToken(UserDetails userDetails);
@@ -12,5 +10,6 @@ public interface JwtService {
 
     boolean isTokenValid(String token, UserDetails userDetails);
 
-    String generateRefreshToken(HashMap<String, Object> objectObjectHashMap, UserDetails userDetails);
+    String generateRefreshToken(
+            HashMap<String, Object> objectObjectHashMap, UserDetails userDetails);
 }

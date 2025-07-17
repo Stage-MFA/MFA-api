@@ -2,11 +2,10 @@ package com.school.security.entities;
 
 import com.school.security.enums.RoleType;
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.*;
 
 @Entity
 @Table(name = "roles")

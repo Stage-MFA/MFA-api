@@ -4,10 +4,9 @@ import com.school.security.dtos.requests.UserReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.entities.User;
 import com.school.security.enums.RoleType;
-
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService extends Service<UserReqDto, UserResDto, Long>{
+public interface UserService extends Service<UserReqDto, UserResDto, Long> {
 
     UserResDto attachRole(String email, RoleType name);
 
@@ -15,5 +14,5 @@ public interface UserService extends Service<UserReqDto, UserResDto, Long>{
 
     UserDetailsService userDetailsService();
 
-   User findByEmail(String email);
+    User findByEmail(String email);
 }

@@ -1,6 +1,6 @@
 package com.school.security.mappers;
 
-public interface Mapper <QD, E, RD>{
+public interface Mapper<QD, E, RD> {
 
     E fromDto(QD d);
 

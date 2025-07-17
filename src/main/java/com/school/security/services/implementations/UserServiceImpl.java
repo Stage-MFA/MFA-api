@@ -12,17 +12,15 @@ import com.school.security.mappers.UserMapper;
 import com.school.security.repositories.RoleRepository;
 import com.school.security.repositories.UserRepository;
 import com.school.security.services.contracts.UserService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,12 +41,15 @@ public class UserServiceImpl implements UserService {
             user.setPwd(passwordEncoder.encode(pwd));
         }
         if (user.getRoles().isEmpty()) {
-            Role defaultRole = roleRepository.findByName(RoleType.USER)
-                    .orElseGet(() -> {
-                        RoleReqDto roleReqDto = new RoleReqDto(RoleType.USER);
-                        Role role = roleMapper.fromDto(roleReqDto);
-                        return roleRepository.save(role);
-                    });
+            Role defaultRole =
+                    roleRepository
+                            .findByName(RoleType.USER)
+                            .orElseGet(
+                                    () -> {
+                                        RoleReqDto roleReqDto = new RoleReqDto(RoleType.USER);
+                                        Role role = roleMapper.fromDto(roleReqDto);
+                                        return roleRepository.save(role);
+                                    });
             user.addRole(defaultRole);
         }
 
@@ -57,8 +58,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResDto> findAll() {
-        return this.userRepository.findAll()
-                .stream().map(this.userMapper::toDto)
+        return this.userRepository.findAll().stream()
+                .map(this.userMapper::toDto)
                 .collect(Collectors.toList());
     }
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             Role role = optionalRole.get();
             user.addRole(role);
-            return  this.userMapper.toDto(userRepository.save(user));
+            return this.userMapper.toDto(userRepository.save(user));
         } else {
             throw new EntityException("User or Role not found");
         }
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             Role role = optionalRole.get();
             user.removeRole(role);
-           return  this.userMapper.toDto(userRepository.save(user));
+            return this.userMapper.toDto(userRepository.save(user));
         } else {
             throw new EntityException("User or Role not found");
         }
@@ -117,14 +118,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailsService userDetailsService() {
-        return email -> userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return email ->
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
     public User findByEmail(String email) {
-        return this.userRepository.findByEmail(email)
+        return this.userRepository
+                .findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
     }
 }
