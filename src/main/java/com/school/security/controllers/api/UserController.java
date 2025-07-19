@@ -1,5 +1,6 @@
 package com.school.security.controllers.api;
 
+import com.school.security.dtos.requests.PwdReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.services.contracts.UserService;
 import java.util.List;
@@ -29,5 +30,10 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResDto getUser(@PathVariable Long id) {
         return this.userService.findById(id);
+    }
+
+    @PutMapping("/pwd")
+    public UserResDto updatePassword(@RequestBody PwdReqDto pwdReqDto) {
+        return userService.updatePassword(pwdReqDto.email(), pwdReqDto.password());
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtServiceImp implements JwtService {
-
     @Value("${jwt.secret.key}")
     private String secretKey;
 

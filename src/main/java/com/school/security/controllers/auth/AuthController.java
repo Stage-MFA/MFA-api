@@ -3,6 +3,7 @@ package com.school.security.controllers.auth;
 import com.school.security.dtos.requests.LoginReqDto;
 import com.school.security.dtos.requests.RefreshReqDto;
 import com.school.security.dtos.requests.UserReqDto;
+import com.school.security.dtos.responses.CodeResDto;
 import com.school.security.dtos.responses.LoginResDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.securities.services.JwtService;
@@ -58,5 +59,19 @@ public class AuthController {
             return new LoginResDto(jwt, refreshReqDto.refreshToken());
         }
         return null;
+    }
+
+    @PostMapping("/code")
+    public CodeResDto generateCode(@RequestBody String email) {
+        var user = this.userService.findByEmail(email);
+        var jwt = this.jwtService.generateToken(user);
+        var refreshToken = this.jwtService.generateRefreshToken(new HashMap<>(), user);
+        if (user != null) {
+            int code = (int) (Math.random() * 900000) + 100000;
+            System.out.println(code);
+            return new CodeResDto(code, jwt, refreshToken);
+        } else {
+            throw new RuntimeException("User not defined");
+        }
     }
 }

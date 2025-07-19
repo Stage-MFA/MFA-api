@@ -15,4 +15,6 @@ public interface UserService extends Service<UserReqDto, UserResDto, Long> {
     UserDetailsService userDetailsService();
 
     User findByEmail(String email);
+
+    UserResDto updatePassword(String email, String newPassword);
 }

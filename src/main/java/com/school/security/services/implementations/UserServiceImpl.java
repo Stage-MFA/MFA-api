@@ -126,8 +126,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
+        System.out.println(email);
         return this.userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+    }
+
+    @Override
+    public UserResDto updatePassword(String email, String newPassword) {
+        User user =
+                userRepository
+                        .findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPwd(passwordEncoder.encode(newPassword));
+        User saved = userRepository.save(user);
+        return this.userMapper.toDto(saved);
     }
 }
