@@ -1,9 +1,11 @@
 package com.school.security.controllers.api;
 
+import com.school.security.dtos.requests.AttachRoleRegDto;
 import com.school.security.dtos.requests.PwdReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.services.contracts.UserService;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +34,27 @@ public class UserController {
         return this.userService.findById(id);
     }
 
+    @GetMapping("/email")
+    public UserResDto getUserByEmail(@RequestParam String email) {
+        return this.userService.getUserRestByEmail(email);
+    }
+
     @PutMapping("/pwd")
     public UserResDto updatePassword(@RequestBody PwdReqDto pwdReqDto) {
         return userService.updatePassword(pwdReqDto.email(), pwdReqDto.password());
+    }
+
+    @PutMapping("/role")
+    public ResponseEntity<UserResDto> updateRole(@RequestBody AttachRoleRegDto attachRoleRegDto) {
+        UserResDto userResDto =
+                userService.attachRole(attachRoleRegDto.email(), attachRoleRegDto.role());
+        return ResponseEntity.ok(userResDto);
+    }
+
+    @DeleteMapping("/role")
+    public ResponseEntity<UserResDto> deleteRole(@RequestBody AttachRoleRegDto attachRoleRegDto) {
+        UserResDto userResDto =
+                userService.detachRole(attachRoleRegDto.email(), attachRoleRegDto.role());
+        return ResponseEntity.ok(userResDto);
     }
 }

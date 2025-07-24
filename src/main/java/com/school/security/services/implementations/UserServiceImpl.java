@@ -142,4 +142,15 @@ public class UserServiceImpl implements UserService {
         User saved = userRepository.save(user);
         return this.userMapper.toDto(saved);
     }
+
+    @Override
+    public UserResDto getUserRestByEmail(String email) {
+        Optional<User> users = this.userRepository.findByEmail(email);
+        if (users.isPresent()) {
+            var user = users.get();
+            return this.userMapper.toDto(user);
+        } else {
+            throw new RuntimeException("User not found ");
+        }
+    }
 }
