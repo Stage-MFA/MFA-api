@@ -1,6 +1,6 @@
 package com.school.security.controllers.api;
 
-import com.school.security.dtos.requests.AttachRoleRegDto;
+import com.school.security.dtos.requests.AttachRoleReqDto;
 import com.school.security.dtos.requests.PwdReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.services.contracts.UserService;
@@ -45,14 +45,14 @@ public class UserController {
     }
 
     @PutMapping("/role")
-    public ResponseEntity<UserResDto> updateRole(@RequestBody AttachRoleRegDto attachRoleRegDto) {
+    public ResponseEntity<UserResDto> updateRole(@RequestBody AttachRoleReqDto attachRoleRegDto) {
         UserResDto userResDto =
                 userService.attachRole(attachRoleRegDto.email(), attachRoleRegDto.role());
         return ResponseEntity.ok(userResDto);
     }
 
     @DeleteMapping("/role")
-    public ResponseEntity<UserResDto> deleteRole(@RequestBody AttachRoleRegDto attachRoleRegDto) {
+    public ResponseEntity<UserResDto> deleteRole(@RequestBody AttachRoleReqDto attachRoleRegDto) {
         UserResDto userResDto =
                 userService.detachRole(attachRoleRegDto.email(), attachRoleRegDto.role());
         return ResponseEntity.ok(userResDto);

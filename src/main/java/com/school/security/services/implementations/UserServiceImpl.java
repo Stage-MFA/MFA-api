@@ -1,13 +1,11 @@
 package com.school.security.services.implementations;
 
-import com.school.security.dtos.requests.RoleReqDto;
 import com.school.security.dtos.requests.UserReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.entities.Role;
 import com.school.security.entities.User;
 import com.school.security.enums.RoleType;
 import com.school.security.exceptions.EntityException;
-import com.school.security.mappers.RoleMapper;
 import com.school.security.mappers.UserMapper;
 import com.school.security.repositories.DirectionRepository;
 import com.school.security.repositories.RoleRepository;
@@ -29,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
-    private RoleMapper roleMapper;
     private BCryptPasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
@@ -47,19 +44,6 @@ public class UserServiceImpl implements UserService {
         if (pwd != null) {
             user.setPwd(passwordEncoder.encode(pwd));
         }
-        if (user.getRoles().isEmpty()) {
-            Role defaultRole =
-                    roleRepository
-                            .findByName(RoleType.USER)
-                            .orElseGet(
-                                    () -> {
-                                        RoleReqDto roleReqDto = new RoleReqDto(RoleType.USER);
-                                        Role role = roleMapper.fromDto(roleReqDto);
-                                        return roleRepository.save(role);
-                                    });
-            user.addRole(defaultRole);
-        }
-
         return this.userMapper.toDto(this.userRepository.save(user));
     }
 
@@ -101,6 +85,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent() && optionalRole.isPresent()) {
             User user = optionalUser.get();
             Role role = optionalRole.get();
+            user.getRoles().clear();
             user.addRole(role);
             return this.userMapper.toDto(userRepository.save(user));
         } else {
@@ -133,7 +118,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        System.out.println(email);
         return this.userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
