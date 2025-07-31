@@ -9,7 +9,9 @@ import com.school.security.enums.RoleType;
 import com.school.security.exceptions.EntityException;
 import com.school.security.mappers.RoleMapper;
 import com.school.security.mappers.UserMapper;
+import com.school.security.repositories.DirectionRepository;
 import com.school.security.repositories.RoleRepository;
+import com.school.security.repositories.SpecialityRepository;
 import com.school.security.repositories.UserRepository;
 import com.school.security.services.contracts.UserService;
 import java.util.List;
@@ -30,13 +32,18 @@ public class UserServiceImpl implements UserService {
     private RoleMapper roleMapper;
     private BCryptPasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
-
     private UserRepository userRepository;
+    private DirectionRepository directionRepository;
+    private SpecialityRepository specialityRepository;
 
     @Override
     public UserResDto createOrUpdate(UserReqDto toSave) {
         String pwd = toSave.password();
         User user = this.userMapper.fromDto(toSave);
+
+        user.setDirection(directionRepository.getReferenceById(toSave.directionId()));
+        user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+
         if (pwd != null) {
             user.setPwd(passwordEncoder.encode(pwd));
         }

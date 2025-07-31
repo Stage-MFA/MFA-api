@@ -1,0 +1,208 @@
+openapi: 3.0.1
+info:
+  title: API de Gestion de Maintenance
+  version: 1.0.0
+  description: |
+    API pour la gestion des matériels informatiques et électriques avec suivi des équipements, maintenances, interventions, pièces détachées, utilisateurs, et ordres de travail.
+
+servers:
+  - url: http://localhost:8090/api
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [ADMIN, TECHNICIEN, USER]
+
+    Equipment:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [INFORMATIQUE, ELECTRIQUE]
+        brand:
+          type: string
+        model:
+          type: string
+        serial_number:
+          type: string
+        acquisition_date:
+          type: string
+          format: date
+        warranty_end_date:
+          type: string
+          format: date
+        assigned_to:
+          type: integer
+        status:
+          type: string
+          enum: [EN_SERVICE, EN_PANNE, AU_REBUT]
+
+    MaintenancePlan:
+      type: object
+      properties:
+        id:
+          type: integer
+        equipment_id:
+          type: integer
+        periodicity:
+          type: string
+          enum: [MENSUEL, TRIMESTRIEL, ANNUEL, AUTRE]
+        next_due_date:
+          type: string
+          format: date
+        description:
+          type: string
+
+    WorkOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        equipment_id:
+          type: integer
+        requester_id:
+          type: integer
+        assigned_tech_id:
+          type: integer
+        type:
+          type: string
+          enum: [PREVENTIVE, CORRECTIVE, CURATIVE]
+        status:
+          type: string
+          enum: [EN_ATTENTE, EN_COURS, RESOLU, ANNULE]
+        reported_at:
+          type: string
+          format: date
+        started_at:
+          type: string
+          format: date
+        ended_at:
+          type: string
+          format: date
+        description:
+          type: string
+        solution:
+          type: string
+        cost:
+          type: number
+          format: float
+
+    SparePart:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        current_stock:
+          type: integer
+        min_stock:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+
+    WorkOrderPart:
+      type: object
+      properties:
+        work_order_id:
+          type: integer
+        spare_part_id:
+          type: integer
+        quantity_used:
+          type: integer
+
+paths:
+  /users:
+    get:
+      summary: Lister les utilisateurs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /equipments:
+    get:
+      summary: Lister les équipements
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Equipment'
+
+  /maintenance-plans:
+    get:
+      summary: Lister les plans de maintenance
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaintenancePlan'
+
+  /work-orders:
+    get:
+      summary: Lister les ordres de travail
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkOrder'
+
+  /spare-parts:
+    get:
+      summary: Lister les pièces détachées
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SparePart'
+
+  /work-order-parts:
+    get:
+      summary: Lister les pièces utilisées dans les ordres
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkOrderPart'

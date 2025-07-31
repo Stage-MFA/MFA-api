@@ -16,6 +16,6 @@ public class RoleMapper implements Mapper<RoleReqDto, Role, RoleResDto> {
 
     @Override
     public RoleResDto toDto(Role entity) {
-        return new RoleResDto(entity.getId(), entity.getName());
+        return new RoleResDto(entity.getRolesId(), entity.getName());
     }
 }

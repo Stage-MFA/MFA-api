@@ -9,4 +9,6 @@ public record UserResDto(
         String lastname,
         String email,
         Gender gender,
+        String direction,
+        String speciality,
         List<RoleResDto> roleResDto) {}

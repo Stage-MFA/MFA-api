@@ -14,8 +14,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Role extends Model implements Serializable {
+@EqualsAndHashCode
+public class Role implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "roles_id")
+    protected Long rolesId;
 
     @Enumerated(EnumType.STRING)
     private RoleType name;

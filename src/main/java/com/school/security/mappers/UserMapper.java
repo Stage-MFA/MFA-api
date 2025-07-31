@@ -31,11 +31,13 @@ public class UserMapper implements Mapper<UserReqDto, User, UserResDto> {
     @Override
     public UserResDto toDto(User entity) {
         return new UserResDto(
-                entity.getId(),
+                entity.getUsersId(),
                 entity.getFirstname(),
                 entity.getLastname(),
                 entity.getEmail(),
                 entity.getGender(),
+                entity.getDirection().getName(),
+                entity.getSpeciality().getName(),
                 toRoleResDto(entity.getRoles()));
     }
 

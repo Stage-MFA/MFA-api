@@ -18,8 +18,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class User extends Model implements Serializable, UserDetails {
+@EqualsAndHashCode
+public class User implements Serializable, UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "users_id")
+    protected Long usersId;
 
     private String firstname;
 
@@ -34,6 +39,14 @@ public class User extends Model implements Serializable, UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "direction_id", nullable = false)
+    private Direction direction;
+
+    @ManyToOne
+    @JoinColumn(name = "speciality_id", nullable = true)
+    private Speciality speciality;
 
     public void addRole(Role role) {
         if (!roles.contains(role)) {
