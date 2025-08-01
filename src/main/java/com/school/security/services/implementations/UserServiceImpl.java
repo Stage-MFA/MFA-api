@@ -39,7 +39,12 @@ public class UserServiceImpl implements UserService {
         User user = this.userMapper.fromDto(toSave);
 
         user.setDirection(directionRepository.getReferenceById(toSave.directionId()));
-        user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+
+        if (toSave.specialityId() != null) {
+            user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+        } else {
+            user.setSpeciality(null);
+        }
 
         if (pwd != null) {
             user.setPwd(passwordEncoder.encode(pwd));

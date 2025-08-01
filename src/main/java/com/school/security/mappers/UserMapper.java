@@ -37,7 +37,7 @@ public class UserMapper implements Mapper<UserReqDto, User, UserResDto> {
                 entity.getEmail(),
                 entity.getGender(),
                 entity.getDirection().getName(),
-                entity.getSpeciality().getName(),
+                entity.getSpeciality() != null ? entity.getSpeciality().getName() : null,
                 toRoleResDto(entity.getRoles()));
     }
 

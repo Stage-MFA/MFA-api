@@ -31,36 +31,40 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                        authorize ->
-                                authorize
-                                        .requestMatchers(HttpMethod.POST, "/auth/login")
+                        auth ->
+                                auth.requestMatchers(HttpMethod.POST, "/auth/login")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.POST, "/auth/register")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/users")
+                                        .requestMatchers(HttpMethod.POST, "/auth/code")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/users/{id}")
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/users",
+                                                "/users/{id}",
+                                                "/users/email")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/users/email")
-                                        .permitAll()
-                                        .requestMatchers(HttpMethod.PUT, "/users/pwd")
-                                        .permitAll()
-                                        .requestMatchers(HttpMethod.PUT, "/users/role")
+                                        .requestMatchers(
+                                                HttpMethod.PUT, "/users/pwd", "/users/role")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/users/role")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.POST, "/auth/code")
-                                        .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/directions")
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/directions", "/directions/{id}")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "/directions")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/directions/{id}")
-                                        .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/directions/{id}")
+                                        .permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/speciality", "/speciality/{id}")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.PUT, "/speciality")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/speciality/{id}")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
@@ -68,6 +72,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(
                         jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

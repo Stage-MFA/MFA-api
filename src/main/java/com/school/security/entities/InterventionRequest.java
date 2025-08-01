@@ -4,6 +4,8 @@ import com.school.security.enums.Priority;
 import com.school.security.enums.StatusType;
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 
 @Entity
@@ -32,11 +34,20 @@ public class InterventionRequest implements Serializable {
     @Column(name = "priority", nullable = true)
     private Priority priority;
 
-    @ManyToOne
-    @JoinColumn(name = "material_id", nullable = false)
-    private Material material;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Material> materials = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User user;
+
+    public void addMaterial(Material material) {
+        if (!materials.contains(material)) {
+            materials.add(material);
+        }
+    }
+
+    public void removeMaterial(Material material) {
+        materials.add(material);
+    }
 }

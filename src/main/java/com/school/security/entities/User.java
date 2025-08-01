@@ -44,7 +44,7 @@ public class User implements Serializable, UserDetails {
     @JoinColumn(name = "direction_id", nullable = false)
     private Direction direction;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "speciality_id", nullable = true)
     private Speciality speciality;
 
