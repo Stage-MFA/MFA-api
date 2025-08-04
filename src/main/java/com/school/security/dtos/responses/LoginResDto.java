@@ -1,3 +1,5 @@
 package com.school.security.dtos.responses;
 
-public record LoginResDto(String accessToken, String refreshToken) {}
+import com.school.security.enums.RoleType;
+
+public record LoginResDto(String accessToken, String refreshToken, RoleType roles) {}

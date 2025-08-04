@@ -42,7 +42,7 @@ public class AuthController {
         var user = this.userService.findByEmail(credential.email());
         var jwt = this.jwtService.generateToken(user);
         var refreshToken = this.jwtService.generateRefreshToken(new HashMap<>(), user);
-        return new LoginResDto(jwt, refreshToken);
+        return new LoginResDto(jwt, refreshToken, user.getRoles().getFirst().getName());
     }
 
     @PostMapping("/register")
@@ -56,7 +56,8 @@ public class AuthController {
         var user = this.userService.findByEmail(username);
         if (this.jwtService.isTokenValid(refreshReqDto.refreshToken(), user)) {
             var jwt = this.jwtService.generateToken(user);
-            return new LoginResDto(jwt, refreshReqDto.refreshToken());
+            return new LoginResDto(
+                    jwt, refreshReqDto.refreshToken(), user.getRoles().get(1).getName());
         }
         return null;
     }
