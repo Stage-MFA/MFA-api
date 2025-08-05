@@ -35,21 +35,44 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResDto createOrUpdate(UserReqDto toSave) {
-        String pwd = toSave.password();
-        User user = this.userMapper.fromDto(toSave);
+        Optional<User> userOptional = userRepository.findByEmail(toSave.email());
 
-        user.setDirection(directionRepository.getReferenceById(toSave.directionId()));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
 
-        if (toSave.specialityId() != null) {
-            user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+            user.setFirstname(toSave.firstname());
+            user.setLastname(toSave.lastname());
+            user.setGender(toSave.gender());
+
+            if (toSave.password() != null && !toSave.password().isBlank()) {
+                user.setPwd(passwordEncoder.encode(toSave.password()));
+            }
+
+            user.setDirection(directionRepository.getReferenceById(toSave.directionId()));
+
+            if (toSave.specialityId() != null) {
+                user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+            } else {
+                user.setSpeciality(null);
+            }
+
+            return userMapper.toDto(userRepository.save(user));
+
         } else {
-            user.setSpeciality(null);
-        }
+            User user = userMapper.fromDto(toSave);
 
-        if (pwd != null) {
-            user.setPwd(passwordEncoder.encode(pwd));
+            user.setDirection(directionRepository.getReferenceById(toSave.directionId()));
+
+            if (toSave.specialityId() != null) {
+                user.setSpeciality(specialityRepository.getReferenceById(toSave.specialityId()));
+            }
+
+            if (toSave.password() != null && !toSave.password().isBlank()) {
+                user.setPwd(passwordEncoder.encode(toSave.password()));
+            }
+
+            return userMapper.toDto(userRepository.save(user));
         }
-        return this.userMapper.toDto(this.userRepository.save(user));
     }
 
     @Override
@@ -149,4 +172,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found ");
         }
     }
+
+    @Override
+    public Long getAccountNoRole() {
+        return this.userRepository.findAll().stream()
+                .filter((user -> user.getRoles().isEmpty()))
+                .count();
+    }
+    ;
 }

@@ -45,7 +45,10 @@ public class SecurityConfig {
                                                 HttpMethod.GET,
                                                 "/users",
                                                 "/users/{id}",
-                                                "/users/email")
+                                                "/users/email",
+                                                "/users/invitation")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/users/{id}")
                                         .permitAll()
                                         .requestMatchers(
                                                 HttpMethod.PUT, "/users/pwd", "/users/role")

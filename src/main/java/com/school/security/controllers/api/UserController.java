@@ -57,4 +57,9 @@ public class UserController {
                 userService.detachRole(attachRoleRegDto.email(), attachRoleRegDto.role());
         return ResponseEntity.ok(userResDto);
     }
+
+    @GetMapping("/invitation")
+    public Long getInvitationCount() {
+        return this.userService.getAccountNoRole();
+    }
 }
