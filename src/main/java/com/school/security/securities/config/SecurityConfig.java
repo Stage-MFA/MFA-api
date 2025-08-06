@@ -48,6 +48,8 @@ public class SecurityConfig {
                                                 "/users/email",
                                                 "/users/invitation")
                                         .permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/invitation")
+                                        .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/users/{id}")
                                         .permitAll()
                                         .requestMatchers(

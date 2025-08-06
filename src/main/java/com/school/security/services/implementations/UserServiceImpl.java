@@ -1,5 +1,6 @@
 package com.school.security.services.implementations;
 
+import com.school.security.controllers.api.InvitationSseController;
 import com.school.security.dtos.requests.UserReqDto;
 import com.school.security.dtos.responses.UserResDto;
 import com.school.security.entities.Role;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private DirectionRepository directionRepository;
     private SpecialityRepository specialityRepository;
+    private InvitationSseController invitationSseController;
 
     @Override
     public UserResDto createOrUpdate(UserReqDto toSave) {
@@ -55,8 +57,15 @@ public class UserServiceImpl implements UserService {
             } else {
                 user.setSpeciality(null);
             }
-
-            return userMapper.toDto(userRepository.save(user));
+            var userToSave = userRepository.save(user);
+            Long count = getAccountNoRole();
+            invitationSseController.sendInvitationUpdate(count);
+            invitationSseController.notifyInvitationList(
+                    userRepository.findAll().stream()
+                            .filter(users -> users.getRoles().isEmpty())
+                            .map(userMapper::toDto)
+                            .collect(Collectors.toList()));
+            return userMapper.toDto(userToSave);
 
         } else {
             User user = userMapper.fromDto(toSave);
@@ -70,8 +79,15 @@ public class UserServiceImpl implements UserService {
             if (toSave.password() != null && !toSave.password().isBlank()) {
                 user.setPwd(passwordEncoder.encode(toSave.password()));
             }
-
-            return userMapper.toDto(userRepository.save(user));
+            var userToSave = userRepository.save(user);
+            Long count = getAccountNoRole();
+            invitationSseController.sendInvitationUpdate(count);
+            invitationSseController.notifyInvitationList(
+                    userRepository.findAll().stream()
+                            .filter(users -> users.getRoles().isEmpty())
+                            .map(userMapper::toDto)
+                            .collect(Collectors.toList()));
+            return userMapper.toDto(userToSave);
         }
     }
 
@@ -99,6 +115,8 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             User userToDelete = userOptional.get();
             this.userRepository.deleteById(id);
+            Long count = getAccountNoRole();
+            invitationSseController.sendInvitationUpdate(count);
             return this.userMapper.toDto(userToDelete);
         } else {
             throw new EntityException("Unable to delete user: user not found with ID " + id);
@@ -115,6 +133,8 @@ public class UserServiceImpl implements UserService {
             Role role = optionalRole.get();
             user.getRoles().clear();
             user.addRole(role);
+            Long count = getAccountNoRole();
+            invitationSseController.sendInvitationUpdate(count);
             return this.userMapper.toDto(userRepository.save(user));
         } else {
             throw new EntityException("User or Role not found");
@@ -130,6 +150,8 @@ public class UserServiceImpl implements UserService {
             User user = optionalUser.get();
             Role role = optionalRole.get();
             user.removeRole(role);
+            Long count = getAccountNoRole();
+            invitationSseController.sendInvitationUpdate(count);
             return this.userMapper.toDto(userRepository.save(user));
         } else {
             throw new EntityException("User or Role not found");
