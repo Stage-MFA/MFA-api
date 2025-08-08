@@ -43,7 +43,8 @@ public class DirectionServiceImpl implements DirectionService {
 
     @Override
     public DirectionResDto createOrUpdate(DirectionReqDto toSave) {
-        return null;
+        return this.directionMapper.toDto(
+                this.directionRepository.save(this.directionMapper.fromDto(toSave)));
     }
 
     @Override

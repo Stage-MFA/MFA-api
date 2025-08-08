@@ -37,4 +37,9 @@ public class DirectionController {
     public DirectionResDto deleteDirection(@PathVariable Long id) {
         return this.directionService.deleteById(id);
     }
+
+    @PostMapping
+    public DirectionResDto save(@RequestBody DirectionReqDto directionReqDto) {
+        return this.directionService.createOrUpdate(directionReqDto);
+    }
 }

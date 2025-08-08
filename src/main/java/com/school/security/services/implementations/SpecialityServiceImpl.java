@@ -57,4 +57,16 @@ public class SpecialityServiceImpl implements SpecialityService {
             throw new EntityException("Speciality to delete not fund");
         }
     }
+
+    @Override
+    public SpecialityResDto save(SpecialityReqDto toSave, Long id) {
+        Optional<Speciality> speciality = this.specialityRepository.findById(id);
+        if (speciality.isPresent()) {
+            Speciality specialityToUpdate = speciality.get();
+            specialityToUpdate.setName(toSave.name());
+            return this.specialityMapper.toDto(this.specialityRepository.save(specialityToUpdate));
+        } else {
+            throw new EntityException("Speciality not found");
+        }
+    }
 }

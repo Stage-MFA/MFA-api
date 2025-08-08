@@ -35,4 +35,9 @@ public class SpecialityController {
     public SpecialityResDto deleteById(@PathVariable Long id) {
         return this.specialityService.deleteById(id);
     }
+
+    @PutMapping("{id}")
+    public SpecialityResDto update(@RequestBody SpecialityReqDto toSave, @PathVariable Long id) {
+        return this.specialityService.save(toSave, id);
+    }
 }
