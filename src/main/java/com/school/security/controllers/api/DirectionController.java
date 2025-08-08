@@ -27,9 +27,10 @@ public class DirectionController {
         return this.directionService.findById(id);
     }
 
-    @PutMapping
-    public DirectionResDto registerDirection(@RequestBody DirectionReqDto toSave) {
-        return this.directionService.createOrUpdate(toSave);
+    @PutMapping("{id}")
+    public DirectionResDto registerDirection(
+            @RequestBody DirectionReqDto toSave, @PathVariable Long id) {
+        return this.directionService.save(toSave, id);
     }
 
     @DeleteMapping("/{id}")

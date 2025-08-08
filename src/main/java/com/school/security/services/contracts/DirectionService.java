@@ -6,4 +6,6 @@ import com.school.security.entities.Direction;
 
 public interface DirectionService extends Service<DirectionReqDto, DirectionResDto, Long> {
     Direction findByName(String email);
+
+    public DirectionResDto save(DirectionReqDto toSave, Long id);
 }

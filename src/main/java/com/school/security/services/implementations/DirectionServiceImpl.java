@@ -29,10 +29,21 @@ public class DirectionServiceImpl implements DirectionService {
                 .orElseThrow(() -> new IllegalArgumentException("Direction not found"));
     }
 
+    public DirectionResDto save(DirectionReqDto toSave, Long id) {
+        Optional<Direction> direction = this.directionRepository.findById(id);
+        if (direction.isPresent()) {
+            Direction directionToUpdate = direction.get();
+            directionToUpdate.setName(toSave.name());
+            return this.directionMapper.toDto(this.directionRepository.save(directionToUpdate));
+        } else {
+            Direction directionToSave = this.directionMapper.fromDto(toSave);
+            return this.directionMapper.toDto(this.directionRepository.save(directionToSave));
+        }
+    }
+
     @Override
     public DirectionResDto createOrUpdate(DirectionReqDto toSave) {
-        Direction direction = this.directionMapper.fromDto(toSave);
-        return this.directionMapper.toDto(this.directionRepository.save(direction));
+        return null;
     }
 
     @Override
