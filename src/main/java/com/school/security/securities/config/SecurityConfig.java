@@ -82,6 +82,13 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/speciality/{id}")
                                         .permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/request", "/request/{id}")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.PUT, "/request")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/request")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
