@@ -95,7 +95,9 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
 
     @Override
     public List<RequestInterventionResDto> findAll() {
-        return requestInterventionRepository.findAll().stream()
+        return this.requestInterventionRepository
+                .findAllByOrderByStatusDescRequestDateDescPriorityAsc()
+                .stream()
                 .map(requestInterventionMapper::toDto)
                 .toList();
     }
