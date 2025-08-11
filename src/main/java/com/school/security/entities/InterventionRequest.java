@@ -38,6 +38,9 @@ public class InterventionRequest implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Material> materials = new ArrayList<>();
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "users_id", nullable = false)
     private User user;

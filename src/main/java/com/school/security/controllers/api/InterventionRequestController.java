@@ -1,7 +1,7 @@
 package com.school.security.controllers.api;
 
 import com.school.security.dtos.requests.RequestInterventionReqDto;
-import com.school.security.entities.InterventionRequest;
+import com.school.security.dtos.responses.RequestInterventionResDto;
 import com.school.security.services.contracts.RequestInterventionService;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +18,28 @@ public class InterventionRequestController {
     }
 
     @GetMapping
-    public List<InterventionRequest> findAll() {
+    public List<RequestInterventionResDto> findAll() {
         return this.requestInterventionService.findAll();
     }
 
     @GetMapping("/{id}")
-    public InterventionRequest findById(@PathVariable Long id) {
+    public RequestInterventionResDto findById(@PathVariable Long id) {
         return this.requestInterventionService.findById(id);
     }
 
     @PostMapping
-    public InterventionRequest save(@RequestBody RequestInterventionReqDto toSave) {
+    public RequestInterventionResDto save(@RequestBody RequestInterventionReqDto toSave) {
         return this.requestInterventionService.createOrUpdate(toSave);
     }
 
-    @PutMapping("{/id}")
-    public InterventionRequest update(@RequestBody InterventionRequest toUpdate, Long id) {
+    @PutMapping("/{id}")
+    public RequestInterventionResDto update(
+            @RequestBody RequestInterventionReqDto toUpdate, @PathVariable Long id) {
         return this.requestInterventionService.update(toUpdate, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public RequestInterventionResDto delete(@PathVariable Long id) {
+        return this.requestInterventionService.deleteById(id);
     }
 }

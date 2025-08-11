@@ -85,9 +85,11 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET, "/request", "/request/{id}")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.PUT, "/request")
+                                        .requestMatchers(HttpMethod.PUT, "/request/{id}")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.POST, "/request")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/request/{id}")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
