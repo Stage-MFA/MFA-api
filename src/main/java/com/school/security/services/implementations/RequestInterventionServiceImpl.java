@@ -169,6 +169,15 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
         return requestInterventionMapper.toDto(updated);
     }
 
+    @Override
+    public List<RequestInterventionResDto> listRequestInterventionByUserId(Long id) {
+        return this.requestInterventionRepository
+                .findAllByUserUsersIdOrderByStatusDescRequestDateDescPriorityAsc(id)
+                .stream()
+                .map(requestInterventionMapper::toDto)
+                .toList();
+    }
+
     private InterventionRequest findExistingEntityById(Long id) {
         return requestInterventionRepository
                 .findById(id)

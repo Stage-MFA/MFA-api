@@ -83,7 +83,10 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/speciality/{id}")
                                         .permitAll()
                                         .requestMatchers(
-                                                HttpMethod.GET, "/request", "/request/{id}")
+                                                HttpMethod.GET,
+                                                "/request",
+                                                "/request/{id}",
+                                                "/request/users/{id}")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "/request/{id}")
                                         .permitAll()

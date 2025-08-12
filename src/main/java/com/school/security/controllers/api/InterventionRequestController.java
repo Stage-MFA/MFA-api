@@ -22,6 +22,11 @@ public class InterventionRequestController {
         return this.requestInterventionService.findAll();
     }
 
+    @GetMapping("/users/{id}")
+    public List<RequestInterventionResDto> findAllByUserId(@PathVariable Long id) {
+        return this.requestInterventionService.listRequestInterventionByUserId(id);
+    }
+
     @GetMapping("/{id}")
     public RequestInterventionResDto findById(@PathVariable Long id) {
         return this.requestInterventionService.findById(id);

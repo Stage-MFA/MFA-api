@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RequestInterventionRepository extends JpaRepository<InterventionRequest, Long> {
     List<InterventionRequest> findAllByOrderByStatusDescRequestDateDescPriorityAsc();
+
+    List<InterventionRequest> findAllByUserUsersIdOrderByStatusDescRequestDateDescPriorityAsc(
+            Long idUser);
 }
