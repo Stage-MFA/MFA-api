@@ -47,4 +47,26 @@ public class InvitationSseController {
             }
         }
     }
+
+    public void sendCountRequestIntervention(Long count) {
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.send(SseEmitter.event().name("count-request-intervention").data(count));
+            } catch (IOException e) {
+                emitter.complete();
+                emitters.remove(emitter);
+            }
+        }
+    }
+
+    public void sendCountIntervention(Long count) {
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.send(SseEmitter.event().name("count-intervention").data(count));
+            } catch (IOException e) {
+                emitter.complete();
+                emitters.remove(emitter);
+            }
+        }
+    }
 }

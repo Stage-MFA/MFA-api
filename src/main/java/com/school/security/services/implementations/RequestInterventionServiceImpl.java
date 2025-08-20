@@ -1,10 +1,12 @@
 package com.school.security.services.implementations;
 
+import com.school.security.controllers.api.InvitationSseController;
 import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
 import com.school.security.entities.InterventionRequest;
 import com.school.security.entities.Material;
 import com.school.security.entities.User;
+import com.school.security.enums.StatusType;
 import com.school.security.exceptions.EntityException;
 import com.school.security.mappers.RequestInterventionMapper;
 import com.school.security.repositories.MaterialRepository;
@@ -26,6 +28,7 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
     private final RequestInterventionMapper requestInterventionMapper;
     private final MaterialRepository materialRepository;
     private final UserRepository userRepository;
+    private InvitationSseController invitationSseController;
 
     @Override
     public RequestInterventionResDto createOrUpdate(RequestInterventionReqDto toSave) {
@@ -89,6 +92,8 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
                 interventionRequest.setMaterials(updatedMaterials);
             }
             InterventionRequest saved = requestInterventionRepository.save(interventionRequest);
+            Long countRequest = this.getCountRequest();
+            invitationSseController.sendCountRequestIntervention(countRequest);
             return requestInterventionMapper.toDto(saved);
         }
     }
@@ -112,6 +117,8 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
     public RequestInterventionResDto deleteById(Long id) {
         InterventionRequest existing = findExistingEntityById(id);
         requestInterventionRepository.delete(existing);
+        Long countRequest = this.getCountRequest();
+        invitationSseController.sendCountRequestIntervention(countRequest);
         return requestInterventionMapper.toDto(existing);
     }
 
@@ -166,6 +173,8 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
         existing.setMaterials(updatedMaterials);
 
         InterventionRequest updated = requestInterventionRepository.save(existing);
+        Long countRequest = this.getCountRequest();
+        invitationSseController.sendCountRequestIntervention(countRequest);
         return requestInterventionMapper.toDto(updated);
     }
 
@@ -176,6 +185,11 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
                 .stream()
                 .map(requestInterventionMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public Long getCountRequest() {
+        return this.findAll().stream().filter(s -> s.status() == StatusType.PENDING).count();
     }
 
     private InterventionRequest findExistingEntityById(Long id) {

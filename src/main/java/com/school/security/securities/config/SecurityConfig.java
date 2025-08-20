@@ -85,6 +85,7 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/request",
+                                                "/request/invitation",
                                                 "/request/{id}",
                                                 "/request/users/{id}")
                                         .permitAll()
@@ -97,6 +98,7 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/interventions",
+                                                "/interventions/invitation",
                                                 "/interventions/{id}")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "interventions/{id}")

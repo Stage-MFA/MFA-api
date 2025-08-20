@@ -47,4 +47,9 @@ public class InterventionRequestController {
     public RequestInterventionResDto delete(@PathVariable Long id) {
         return this.requestInterventionService.deleteById(id);
     }
+
+    @GetMapping("/invitation")
+    public Long getRequestCount() {
+        return this.requestInterventionService.getCountRequest();
+    }
 }

@@ -9,4 +9,6 @@ public interface RequestInterventionService
     public RequestInterventionResDto update(RequestInterventionReqDto toUpdate, Long id);
 
     public List<RequestInterventionResDto> listRequestInterventionByUserId(Long id);
+
+    public Long getCountRequest();
 }
