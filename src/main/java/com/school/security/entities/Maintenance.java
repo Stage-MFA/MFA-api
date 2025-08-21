@@ -24,7 +24,7 @@ public class Maintenance implements Serializable {
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = true)
     private LocalDateTime endDate;
 
     @Column(name = "description", columnDefinition = "TEXT")
