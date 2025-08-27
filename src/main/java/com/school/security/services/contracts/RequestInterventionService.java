@@ -3,6 +3,7 @@ package com.school.security.services.contracts;
 import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
 import java.util.List;
+import java.util.Map;
 
 public interface RequestInterventionService
         extends Service<RequestInterventionReqDto, RequestInterventionResDto, Long> {
@@ -11,4 +12,8 @@ public interface RequestInterventionService
     public List<RequestInterventionResDto> listRequestInterventionByUserId(Long id);
 
     public Long getCountRequest();
+
+    public Map<String, Object> getVariationParAnnee(int year);
+
+    List<Integer> findAllYearsWithRequest();
 }

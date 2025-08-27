@@ -2,6 +2,7 @@ package com.school.security.entities;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Entity
@@ -11,18 +12,21 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class journal implements Serializable {
+public class Journal implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "journal_id")
     protected Long journalId;
 
+    @Column(name = "journal_date")
+    private LocalDateTime dateJournal;
+
     @Column(name = "action", nullable = false)
     private String action;
 
-    @Column(name = "duration_minutes")
-    private int durationMinutes;
+    @Column(name = "duration_hour")
+    private int durationHour;
 
     @ManyToOne
     @JoinColumn(name = "maintenance_id", nullable = false)

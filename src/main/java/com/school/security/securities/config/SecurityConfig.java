@@ -87,7 +87,9 @@ public class SecurityConfig {
                                                 "/request",
                                                 "/request/invitation",
                                                 "/request/{id}",
-                                                "/request/users/{id}")
+                                                "/request/users/{id}",
+                                                "/variation-by-years",
+                                                "/years-possibles")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "/request/{id}")
                                         .permitAll()
@@ -117,6 +119,13 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/maintenances")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/maintenances/{id}")
+                                        .permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/journals", "/journals/{id}")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/journals")
+                                        .permitAll()
+                                        .requestMatchers(HttpMethod.DELETE, "/journals/{id}")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())

@@ -4,6 +4,7 @@ import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
 import com.school.security.services.contracts.RequestInterventionService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,5 +52,15 @@ public class InterventionRequestController {
     @GetMapping("/invitation")
     public Long getRequestCount() {
         return this.requestInterventionService.getCountRequest();
+    }
+
+    @GetMapping("/variation-by-years")
+    public Map<String, Object> getVariation(@RequestParam int year) {
+        return this.requestInterventionService.getVariationParAnnee(year);
+    }
+
+    @GetMapping("/years-possibles")
+    public List<Integer> getYears() {
+        return this.requestInterventionService.findAllYearsWithRequest();
     }
 }
