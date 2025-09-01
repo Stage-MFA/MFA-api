@@ -3,6 +3,7 @@ package com.school.security.services.implementations;
 import com.school.security.controllers.api.InvitationSseController;
 import com.school.security.dtos.requests.InterventionReqDto;
 import com.school.security.dtos.responses.InterventionResDto;
+import com.school.security.dtos.responses.InterventionStatisticsResDto;
 import com.school.security.entities.Intervention;
 import com.school.security.enums.StatusType;
 import com.school.security.exceptions.EntityException;
@@ -43,6 +44,22 @@ public class InterventionServiceImplement implements InterventionService {
     @Override
     public Long getCountIntervention() {
         return this.findAll().stream().filter(s -> s.status() == StatusType.PENDING).count();
+    }
+
+    @Override
+    public InterventionStatisticsResDto getInterventionStatistics() {
+        Long interventionTotal = (long) this.interventionRepository.findAll().size();
+        Long pending = this.getCountIntervention();
+        Long progress =
+                this.interventionRepository.findAll().stream()
+                        .filter(status -> status.getStatus() == StatusType.IN_PROGRESS)
+                        .count();
+        Long finish =
+                this.interventionRepository.findAll().stream()
+                        .filter(status -> status.getStatus() == StatusType.FINISH)
+                        .count();
+
+        return new InterventionStatisticsResDto(interventionTotal, pending, progress, finish);
     }
 
     @Override

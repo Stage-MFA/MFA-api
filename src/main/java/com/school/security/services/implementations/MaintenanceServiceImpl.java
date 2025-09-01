@@ -2,7 +2,9 @@ package com.school.security.services.implementations;
 
 import com.school.security.dtos.requests.MaintenanceReqDto;
 import com.school.security.dtos.responses.MaintenanceResDto;
+import com.school.security.dtos.responses.MaintenancesStatisticsResDto;
 import com.school.security.entities.Maintenance;
+import com.school.security.enums.StatusType;
 import com.school.security.exceptions.EntityException;
 import com.school.security.mappers.MaintenanceMapper;
 import com.school.security.repositories.InterventionRepository;
@@ -39,6 +41,21 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
         Maintenance updated = maintenanceRepository.save(existing);
         return maintenanceMapper.toDto(updated);
+    }
+
+    @Override
+    public MaintenancesStatisticsResDto getMaintenanceStatistic() {
+        Long maintenancesTotal = (long) this.maintenanceRepository.findAll().size();
+        Long progress =
+                this.maintenanceRepository.findAll().stream()
+                        .filter(status -> status.getStatus() == StatusType.IN_PROGRESS)
+                        .count();
+        Long finish =
+                this.maintenanceRepository.findAll().stream()
+                        .filter(status -> status.getStatus() == StatusType.FINISH)
+                        .count();
+
+        return new MaintenancesStatisticsResDto(maintenancesTotal, progress, finish);
     }
 
     @Override

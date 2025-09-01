@@ -2,6 +2,7 @@ package com.school.security.services.contracts;
 
 import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
+import com.school.security.dtos.responses.RequestStatisticsResDto;
 import java.util.List;
 import java.util.Map;
 
@@ -16,4 +17,6 @@ public interface RequestInterventionService
     public Map<String, Object> getVariationParAnnee(int year);
 
     List<Integer> findAllYearsWithRequest();
+
+    RequestStatisticsResDto getStatisticIntervention();
 }

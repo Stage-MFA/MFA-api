@@ -2,19 +2,18 @@ package com.school.security.services.implementations;
 
 import com.school.security.controllers.api.InvitationSseController;
 import com.school.security.dtos.requests.UserReqDto;
+import com.school.security.dtos.responses.TechnicianStatisticResDto;
 import com.school.security.dtos.responses.UserResDto;
+import com.school.security.dtos.responses.UserStatisticsResDto;
 import com.school.security.entities.Role;
 import com.school.security.entities.User;
+import com.school.security.enums.Gender;
 import com.school.security.enums.RoleType;
 import com.school.security.exceptions.EntityException;
 import com.school.security.mappers.UserMapper;
-import com.school.security.repositories.DirectionRepository;
-import com.school.security.repositories.RoleRepository;
-import com.school.security.repositories.SpecialityRepository;
-import com.school.security.repositories.UserRepository;
+import com.school.security.repositories.*;
 import com.school.security.services.contracts.UserService;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,6 +33,8 @@ public class UserServiceImpl implements UserService {
     private DirectionRepository directionRepository;
     private SpecialityRepository specialityRepository;
     private InvitationSseController invitationSseController;
+    private InterventionRepository interventionRepository;
+    private MaintenanceRepository maintenanceRepository;
 
     @Override
     public UserResDto createOrUpdate(UserReqDto toSave) {
@@ -201,5 +202,135 @@ public class UserServiceImpl implements UserService {
                 .filter((user -> user.getRoles().isEmpty()))
                 .count();
     }
-    ;
+
+    @Override
+    public UserStatisticsResDto getStatisticUsers() {
+        Long totalUsers = (long) this.userRepository.findAll().size();
+        Long maleUsers =
+                this.userRepository.findAll().stream()
+                        .filter(user -> user.getGender() == Gender.M)
+                        .count();
+        Long femaleUsers =
+                this.userRepository.findAll().stream()
+                        .filter(user -> user.getGender() == Gender.F)
+                        .count();
+        Long users =
+                this.userRepository.findAll().stream()
+                        .filter(
+                                user ->
+                                        user.getRoles().stream()
+                                                .anyMatch(role -> role.getName() == RoleType.USER))
+                        .count();
+        ;
+        Long technicians =
+                this.userRepository.findAll().stream()
+                        .filter(
+                                user ->
+                                        user.getRoles().stream()
+                                                .anyMatch(
+                                                        role ->
+                                                                role.getName()
+                                                                        == RoleType.TECHNICIAN))
+                        .count();
+        Long managers =
+                this.userRepository.findAll().stream()
+                        .filter(
+                                user ->
+                                        user.getRoles().stream()
+                                                .anyMatch(role -> role.getName() == RoleType.ADMIN))
+                        .count();
+        return new UserStatisticsResDto(
+                totalUsers, maleUsers, femaleUsers, users, technicians, managers);
+    }
+
+    @Override
+    public TechnicianStatisticResDto getStatisticTechnician() {
+        var usersList = this.userRepository.findAll();
+
+        var technicians =
+                usersList.stream()
+                        .filter(
+                                user ->
+                                        user.getRoles().stream()
+                                                .anyMatch(
+                                                        role ->
+                                                                role.getName()
+                                                                        == RoleType.TECHNICIAN))
+                        .toList();
+
+        Long technicianTotal = (long) technicians.size();
+        Long maleTechnicians =
+                technicians.stream().filter(user -> user.getGender() == Gender.M).count();
+        Long femaleTechnicians =
+                technicians.stream().filter(user -> user.getGender() == Gender.F).count();
+
+        var allInterventions = this.interventionRepository.findAll();
+
+        Map<Long, Long> interventionsByTechnician =
+                allInterventions.stream()
+                        .filter(intervention -> intervention.getUser() != null)
+                        .collect(
+                                Collectors.groupingBy(
+                                        intervention -> intervention.getUser().getUsersId(),
+                                        Collectors.counting()));
+
+        List<Object> topPerformingTechnicianIntervention =
+                Collections.singletonList(
+                        interventionsByTechnician.entrySet().stream()
+                                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                                .limit(5)
+                                .map(
+                                        entry -> {
+                                            var technician =
+                                                    this.userRepository
+                                                            .findById(entry.getKey())
+                                                            .orElseThrow();
+                                            Map<String, Object> map = new HashMap<>();
+                                            map.put("firstName", technician.getFirstname());
+                                            map.put("lastName", technician.getLastname());
+                                            map.put("totalInterventions", entry.getValue());
+                                            return map;
+                                        })
+                                .toList());
+
+        var allMaintenances = this.maintenanceRepository.findAll();
+
+        Map<Long, Long> maintenancesByTechnician =
+                allMaintenances.stream()
+                        .filter(maintenance -> maintenance.getIntervention().getUser() != null)
+                        .collect(
+                                Collectors.groupingBy(
+                                        maintenance ->
+                                                maintenance
+                                                        .getIntervention()
+                                                        .getUser()
+                                                        .getUsersId(),
+                                        Collectors.counting()));
+
+        List<Object> topPerformingTechnicianMaintenances =
+                Collections.singletonList(
+                        maintenancesByTechnician.entrySet().stream()
+                                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
+                                .limit(5)
+                                .map(
+                                        entry -> {
+                                            var technician =
+                                                    this.userRepository
+                                                            .findById(entry.getKey())
+                                                            .orElseThrow();
+                                            Map<String, Object> map = new HashMap<>();
+                                            map.put("firstName", technician.getFirstname());
+                                            map.put("lastName", technician.getLastname());
+                                            map.put("totalMaintenances", entry.getValue());
+                                            return map;
+                                        })
+                                .toList());
+
+        return new TechnicianStatisticResDto(
+                technicianTotal,
+                maleTechnicians,
+                femaleTechnicians,
+                topPerformingTechnicianIntervention,
+                topPerformingTechnicianMaintenances);
+    }
 }

@@ -2,13 +2,19 @@ package com.school.security.controllers.api;
 
 import com.school.security.dtos.requests.InterventionReqDto;
 import com.school.security.dtos.responses.InterventionResDto;
+import com.school.security.dtos.responses.InterventionStatisticsResDto;
 import com.school.security.services.contracts.InterventionService;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/interventions")
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.1.133:3000/","https://mfamaintenance.netlify.app/"})
+@CrossOrigin(
+        origins = {
+            "http://localhost:3000",
+            "http://192.168.1.133:3000/",
+            "https://mfamaintenance.netlify.app/"
+        })
 public class InterventionController {
 
     private final InterventionService interventionService;
@@ -46,5 +52,10 @@ public class InterventionController {
     @GetMapping("/invitation")
     public Long getInterventionCount() {
         return this.interventionService.getCountIntervention();
+    }
+
+    @GetMapping("/statistics")
+    public InterventionStatisticsResDto getInterventionStatistics() {
+        return this.interventionService.getInterventionStatistics();
     }
 }

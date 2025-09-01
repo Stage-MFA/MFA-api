@@ -11,7 +11,12 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/invitation")
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.1.133:3000/","https://mfamaintenance.netlify.app/"})
+@CrossOrigin(
+        origins = {
+            "http://localhost:3000",
+            "http://192.168.1.133:3000/",
+            "https://mfamaintenance.netlify.app/"
+        })
 public class InvitationSseController {
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 

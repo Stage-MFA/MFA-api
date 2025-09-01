@@ -1,7 +1,9 @@
 package com.school.security.services.contracts;
 
 import com.school.security.dtos.requests.UserReqDto;
+import com.school.security.dtos.responses.TechnicianStatisticResDto;
 import com.school.security.dtos.responses.UserResDto;
+import com.school.security.dtos.responses.UserStatisticsResDto;
 import com.school.security.entities.User;
 import com.school.security.enums.RoleType;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,4 +23,8 @@ public interface UserService extends Service<UserReqDto, UserResDto, Long> {
     UserResDto getUserRestByEmail(String email);
 
     Long getAccountNoRole();
+
+    UserStatisticsResDto getStatisticUsers();
+
+    TechnicianStatisticResDto getStatisticTechnician();
 }

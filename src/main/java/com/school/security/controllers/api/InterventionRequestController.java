@@ -2,6 +2,7 @@ package com.school.security.controllers.api;
 
 import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
+import com.school.security.dtos.responses.RequestStatisticsResDto;
 import com.school.security.services.contracts.RequestInterventionService;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/request")
-@CrossOrigin(origins = {"http://localhost:3000","https://mfamaintenance.netlify.app/","http://192.168.1.133:3000/"})
+@CrossOrigin(
+        origins = {
+            "http://localhost:3000",
+            "https://mfamaintenance.netlify.app/",
+            "http://192.168.1.133:3000/"
+        })
 public class InterventionRequestController {
 
     private final RequestInterventionService requestInterventionService;
@@ -62,5 +68,10 @@ public class InterventionRequestController {
     @GetMapping("/years-possibles")
     public List<Integer> getYears() {
         return this.requestInterventionService.findAllYearsWithRequest();
+    }
+
+    @GetMapping("/statistics")
+    public RequestStatisticsResDto getStatisticIntervention() {
+        return this.requestInterventionService.getStatisticIntervention();
     }
 }

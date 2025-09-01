@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/directions")
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.1.133:3000/","https://mfamaintenance.netlify.app/"})
+@CrossOrigin(
+        origins = {
+            "http://localhost:3000",
+            "http://192.168.1.133:3000/",
+            "https://mfamaintenance.netlify.app/"
+        })
 public class DirectionController {
 
     private final DirectionService directionService;

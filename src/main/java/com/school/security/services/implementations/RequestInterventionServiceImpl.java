@@ -3,6 +3,7 @@ package com.school.security.services.implementations;
 import com.school.security.controllers.api.InvitationSseController;
 import com.school.security.dtos.requests.RequestInterventionReqDto;
 import com.school.security.dtos.responses.RequestInterventionResDto;
+import com.school.security.dtos.responses.RequestStatisticsResDto;
 import com.school.security.entities.InterventionRequest;
 import com.school.security.entities.Material;
 import com.school.security.entities.User;
@@ -237,5 +238,21 @@ public class RequestInterventionServiceImpl implements RequestInterventionServic
     @Override
     public List<Integer> findAllYearsWithRequest() {
         return this.requestInterventionRepository.findAllYearsWithRequests();
+    }
+
+    @Override
+    public RequestStatisticsResDto getStatisticIntervention() {
+        Long requestTotal = (long) this.requestInterventionRepository.findAll().size();
+        Long pending = this.getCountRequest();
+        Long progress =
+                this.findAll().stream()
+                        .filter(status -> status.status() == StatusType.IN_PROGRESS)
+                        .count();
+        Long finish =
+                this.findAll().stream()
+                        .filter(status -> status.status() == StatusType.FINISH)
+                        .count();
+
+        return new RequestStatisticsResDto(requestTotal, pending, progress, finish);
     }
 }
