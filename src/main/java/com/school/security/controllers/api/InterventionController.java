@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/interventions")
-@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.1.133:3000/"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://192.168.1.133:3000/","https://mfamaintenance.netlify.app/"})
 public class InterventionController {
 
     private final InterventionService interventionService;
