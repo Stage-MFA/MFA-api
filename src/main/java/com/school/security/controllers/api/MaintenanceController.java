@@ -5,6 +5,7 @@ import com.school.security.dtos.responses.MaintenanceResDto;
 import com.school.security.dtos.responses.MaintenancesStatisticsResDto;
 import com.school.security.services.contracts.MaintenanceService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,5 +53,15 @@ public class MaintenanceController {
     @GetMapping("/statistics")
     public MaintenancesStatisticsResDto getMaintenanceStatistic() {
         return this.maintenanceService.getMaintenanceStatistic();
+    }
+
+    @GetMapping("/variation-by-years")
+    public Map<String, Object> getVariation(@RequestParam int year) {
+        return this.maintenanceService.getVariationParAnnee(year);
+    }
+
+    @GetMapping("/years-possibles")
+    public List<Integer> getYears() {
+        return this.maintenanceService.findAllYearsWithRequest();
     }
 }

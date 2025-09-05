@@ -106,6 +106,8 @@ public class SecurityConfig {
                                                 "/interventions",
                                                 "/interventions/invitation",
                                                 "/interventions/{id}",
+                                                "/interventions/variation-by-years",
+                                                "/interventions/years-possibles",
                                                 "interventions/statistics")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "interventions/{id}")
@@ -118,6 +120,8 @@ public class SecurityConfig {
                                                 HttpMethod.GET,
                                                 "/maintenances",
                                                 "/maintenances/{id}",
+                                                "/maintenances/variation-by-years",
+                                                "/maintenances/years-possibles",
                                                 "/maintenances/statistics")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.PUT, "/maintenances/{id}")

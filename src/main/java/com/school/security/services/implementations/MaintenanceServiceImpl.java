@@ -11,7 +11,12 @@ import com.school.security.repositories.InterventionRepository;
 import com.school.security.repositories.MaintenanceRepository;
 import com.school.security.services.contracts.MaintenanceService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +61,42 @@ public class MaintenanceServiceImpl implements MaintenanceService {
                         .count();
 
         return new MaintenancesStatisticsResDto(maintenancesTotal, progress, finish);
+    }
+
+    @Override
+    public Map<String, Object> getVariationParAnnee(int year) {
+        List<Object[]> minMaxList = this.maintenanceRepository.findMinMaxDateByYear(year);
+        LocalDateTime minDate = null;
+        LocalDateTime maxDate = null;
+
+        if (!minMaxList.isEmpty()) {
+            Object[] minMax = minMaxList.get(0);
+            if (minMax[0] != null) minDate = (LocalDateTime) minMax[0];
+            if (minMax[1] != null) maxDate = (LocalDateTime) minMax[1];
+        }
+
+        List<Object[]> results = this.maintenanceRepository.countByStatusAndDateByYear(year);
+        Map<LocalDate, Map<StatusType, Long>> variation = new LinkedHashMap<>();
+        for (Object[] row : results) {
+            StatusType status = (StatusType) row[0];
+            LocalDate date = ((java.sql.Date) row[1]).toLocalDate();
+            Long count = (Long) row[2];
+
+            variation.putIfAbsent(date, new HashMap<>());
+            variation.get(date).put(status, count);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("minDate", minDate);
+        response.put("maxDate", maxDate);
+        response.put("variation", variation);
+
+        return response;
+    }
+
+    @Override
+    public List<Integer> findAllYearsWithRequest() {
+        return this.maintenanceRepository.findAllYearsWithRequests();
     }
 
     @Override
