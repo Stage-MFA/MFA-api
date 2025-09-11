@@ -36,4 +36,20 @@ public class StatController {
     public StatResDto getByDate(@RequestParam LocalDate date) {
         return this.statService.getByDate(date);
     }
+
+    @GetMapping("/betweenDates")
+    public StatResDto getMaxDateBetweenDates(
+            @RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+        return this.statService.getReportBetweenDates(startDate, endDate);
+    }
+
+    @GetMapping("/month")
+    public StatResDto getReportByMonth(@RequestParam int year, @RequestParam int month) {
+        return this.statService.getReportByMonth(year, month);
+    }
+
+    @GetMapping("/trimester")
+    public StatResDto getReportTrimester(@RequestParam int year, @RequestParam int trimester) {
+        return this.statService.getReportByTrimester(year, trimester);
+    }
 }

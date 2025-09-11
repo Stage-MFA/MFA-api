@@ -59,6 +59,44 @@ public class StatServiceImpl {
         return new StatResDto(stat.getId(), stat.getDate(), stat.getStat());
     }
 
+    public StatResDto getReportBetweenDates(LocalDate startDate, LocalDate endDate) {
+        LocalDate maxDate = this.statRepository.findMaxDateBetweenDates(startDate, endDate);
+        if (maxDate != null) {
+            return getByDate(maxDate);
+        } else {
+            throw new EntityException("Date not found");
+        }
+    }
+
+    public StatResDto getReportByMonth(int year, int month) {
+        LocalDate maxDateInMonth = this.statRepository.findMaxDateInMonthAndYear(year, month);
+        if (maxDateInMonth != null) {
+            return getByDate(maxDateInMonth);
+        } else {
+            throw new EntityException("Date not found");
+        }
+    }
+
+    public LocalDate getMaxDateInTrimester(int year, int trimester) {
+        if (trimester < 1 || trimester > 4) {
+            throw new EntityException("Trimester must be between 1 and 4");
+        }
+
+        int startMonth = (trimester - 1) * 3 + 1;
+        int endMonth = startMonth + 2;
+
+        return this.statRepository.findMaxDateInTrimester(year, startMonth, endMonth);
+    }
+
+    public StatResDto getReportByTrimester(int year, int trimester) {
+        LocalDate maxDateInMonth = getMaxDateInTrimester(year, trimester);
+        if (maxDateInMonth != null) {
+            return getByDate(maxDateInMonth);
+        } else {
+            throw new EntityException("Date not found");
+        }
+    }
+
     private RapportResDto getRapportResDto(
             UserStatisticsResDto userStatistics,
             TechnicianStatisticResDto technicianStatistics,

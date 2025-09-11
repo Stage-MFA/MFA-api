@@ -137,7 +137,13 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/journals/{id}")
                                         .permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/stats", "/stats/{id}")
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/stats",
+                                                "/stats/trimester",
+                                                "/stats/{id}",
+                                                "/stats/betweenDates",
+                                                "/stats/month")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.POST, "/stats")
                                         .permitAll()
