@@ -23,7 +23,7 @@ public class StatController {
 
     @PostMapping
     public ResponseEntity<Stat> generateStat() {
-        Stat stat = statService.saveRapport();
+        Stat stat = statService.saveReport();
         return ResponseEntity.ok(stat);
     }
 

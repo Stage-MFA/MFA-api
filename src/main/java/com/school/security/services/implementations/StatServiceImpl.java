@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +25,12 @@ public class StatServiceImpl {
         return this.statRepository.findAll();
     }
 
-    public Stat saveRapport() {
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void saveStatisticsDailyBackup() {
+        saveReport();
+    }
+
+    public Stat saveReport() {
         UserStatisticsResDto userStatistics = this.userService.getStatisticUsers();
         TechnicianStatisticResDto technicianStatistics = this.userService.getStatisticTechnician();
         RequestStatisticsResDto requestStatistics =
